@@ -10,6 +10,7 @@ A Clojure library designed to improve REPL.
 
 ### run lein repl
     (use 'repl-helper)
+    
     (ls)                  => list all namespaces
     (ls clojure.core)     => list members of clojure.core namespace
     (ls Integer)          => list members of java.lang.Integer class
@@ -17,6 +18,7 @@ A Clojure library designed to improve REPL.
     (ls "")               => list members of java.lang.String class
     (ls list)             => list documentation of clojure.core/list
 
+    (dbg (+ 1 1))         => (+ 1 1) => 2
 ## License
 
 Copyright © 2019 zbq
