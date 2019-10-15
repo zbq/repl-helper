@@ -2,7 +2,7 @@
   (:require [clojure.reflect :as reflect]
             [clojure.string :as string]))
 
-(defn ls-ns
+(defn- ls-ns
   [sym]
   (let [ms (map meta (vals (ns-publics sym)))
         ms (sort-by :name ms)]
@@ -11,13 +11,13 @@
        (str (:name m)
             (if (:arglists m) (pr-str (:arglists m)) ""))))))
 
-(defn ls-var
+(defn- ls-var
   [sym]
   (let [m (meta (resolve sym))]
     (when-let [doc (:doc m)]
       (println doc))))
 
-(defn ls-class
+(defn- ls-class
   [cls]
   (let [ms (filter #(:public (:flags %))
                    (:members (reflect/type-reflect cls)))
@@ -30,25 +30,31 @@
             (when (:return-type m)
               (str " -> " (:return-type m))))))))
 
-(defn ls-literal
+(defn- ls-literal
   [literal]
   (ls-class (class literal)))
+
+(defn ls-
+  ([]
+   (doseq [ns (sort (map ns-name (all-ns)))]
+     (println ns)))
+  ([sym]
+   (if (symbol? sym)
+     (cond
+       (find-ns sym)
+       (ls-ns sym)
+       (var? (resolve sym))
+       (ls-var sym)
+       (class? (resolve sym))
+       (ls-class (resolve sym)))
+     (ls-literal sym))))
 
 (defmacro ls
   "list namespaces, members of namespace/class, doc of var."
   ([]
-   `(doseq [ns# (sort (map ns-name (all-ns)))]
-      (println ns#)))
+   `(ls-))
   ([sym]
-   `(if (symbol? '~sym)
-      (cond
-        (find-ns '~sym)
-        (ls-ns '~sym)
-        (var? (resolve '~sym))
-        (ls-var '~sym)
-        (class? (resolve '~sym))
-        (ls-class (resolve '~sym)))
-      (ls-literal '~sym))))
+   `(ls- '~sym)))
 
 (defmacro dbg
   [form]
