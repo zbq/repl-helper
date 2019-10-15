@@ -1,10 +1,21 @@
 # repl-helper
 
-A Clojure library designed to ... well, that part is up to you.
+A Clojure library designed to improve REPL.
 
 ## Usage
 
-FIXME
+### Add ~/.lein/profiles.clj
+    {:repl
+        {:dependencies [[repl-helper "0.1.0"]]}}
+
+### run lein repl
+    (use 'repl-helper)
+    (ls)                  => list all namespaces
+    (ls clojure.core)     => list members of clojure.core namespace
+    (ls Integer)          => list members of java.lang.Integer class
+    (ls 1)                => list members of java.lang.Long class
+    (ls "")               => list members of java.lang.String class
+    (ls list)             => list documentation of clojure.core/list
 
 ## License
 
